@@ -20,14 +20,14 @@ import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
 
 @Composable
 fun NavigationBottom(
-    buttons: List<BottomNavigationModel>,
+    model: List<BottomNavigationModel>,
     navHostController: NavHostController
 ) {
     var clickedStatus by remember {
-        mutableStateOf(buttons.first().routeEnum)
+        mutableStateOf(model.first().routeEnum)
     }
-    return NavigationBar {
-        buttons.forEach {
+    NavigationBar {
+        model.forEach {
             NavigationBarItem(
                 selected = clickedStatus == it.routeEnum ,
                 onClick = {
