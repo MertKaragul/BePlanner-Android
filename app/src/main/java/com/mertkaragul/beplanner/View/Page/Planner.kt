@@ -1,9 +1,20 @@
 package com.mertkaragul.beplanner.View.Page
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -13,9 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mertkaragul.beplanner.Model.Picker.DatePickerModel
 import com.mertkaragul.beplanner.Model.Picker.TimePickerModel
@@ -36,34 +50,66 @@ fun Planner(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        val deviceWidth = LocalConfiguration.current.screenWidthDp
+        val deviceHeight = LocalConfiguration.current.screenHeightDp
         val context = LocalContext.current
         val calendar = Calendar.getInstance()
-        var text by remember { mutableStateOf("") }
+        var planName by remember { mutableStateOf("") }
         var timerModel by remember { mutableStateOf(TimePickerModel(0,0,0))  }
         var dateModel by remember { mutableStateOf(DatePickerModel(0,0,0))  }
 
-        BePText(text = "Let's take a plan", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        BePDefaultHeightSpacer()
-        BePTextField(value = text, onValueChange = { text = it } , placeholder = "Plan name")
-        BePDefaultHeightSpacer()
-        if(timerModel.hour != 0 && timerModel.minute != 0 ) {
-            BePTextField(value = "${timerModel.hour}:${timerModel.minute}", onValueChange = {}, placeholder = "Selected time" ,enabled = false )
-        }
-        BePDefaultHeightSpacer()
-        BePButton(text = "Select Time", onClick = {
-            picker.timePicker(context, calendar){
-                timerModel = it
+        Column(
+            modifier = Modifier.width((deviceWidth * .8).dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Row(modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround) {
+                Column(modifier = Modifier.size(((deviceHeight + deviceWidth) * .009).dp).clip(
+                    RoundedCornerShape(100.dp)).background(MaterialTheme.colorScheme.primary)) {}
+
+                BePText(
+                    text = "Let's take a plan",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Column(modifier = Modifier.size(((deviceHeight + deviceWidth) * .009).dp).clip(
+                    RoundedCornerShape(100.dp)).background(MaterialTheme.colorScheme.primary)) {}
             }
-        })
-        BePDefaultHeightSpacer()
-        BePButton(text = "Select Date", onClick = {
-            dateModel =  picker.dateTimePicker(context,calendar)
-        })
+            BePDefaultHeightSpacer()
+            BePTextField(value = planName, onValueChange = { planName = it } , placeholder = "Plan name", modifier = Modifier.fillMaxWidth())
+            BePDefaultHeightSpacer()
+            BePTextField(value = "${timerModel.hour}:${timerModel.minute}",
+                onValueChange = {},
+                placeholder = if(timerModel.hour != 0 && timerModel.minute != 0) "Selected Time" else "Click and select time",
+                enabled = false ,
+                modifier = Modifier
+                    .clickable {
+                        picker.timePicker(context, calendar) {
+                            timerModel = it
+                        }
+                    }
+                    .fillMaxWidth())
+            BePDefaultHeightSpacer()
+            BePTextField(value = "${dateModel.dayOfMonth}.${dateModel.month}.${dateModel.year}",
+                onValueChange = {},
+                placeholder = if(dateModel.year != 0 && dateModel.month != 0 && dateModel.dayOfMonth != 0) "Selected Date" else "Click and select date",
+                enabled = false,
+                modifier = Modifier
+                    .clickable {
+                        picker.dateTimePicker(context, calendar) {
+                            dateModel = it
+                        }
+                    }
+                    .fillMaxWidth())
 
-
-        BePButton(text = "Create plan", onClick = {  })
-
-
+            BePDefaultHeightSpacer()
+            BePButton(text = "Create plan", onClick = {  }, modifier = Modifier.fillMaxWidth() ,buttonColors = ButtonDefaults.buttonColors( containerColor = MaterialTheme.colorScheme.primary))
+        }
     }
 }
 

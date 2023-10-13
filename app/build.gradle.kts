@@ -67,7 +67,12 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.3")
+
     implementation("androidx.navigation:navigation-compose:2.7.4")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
 
     /**  Room database **/

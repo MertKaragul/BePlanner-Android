@@ -40,7 +40,7 @@ fun BePTextField(
     errorText : String = "Error, please fill text",
     placeholder : String,
     enabled : Boolean = true,
-    leadingIcon : () -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
     var isError by remember {
         mutableStateOf(false)
@@ -83,12 +83,11 @@ fun BePTextField(
                 }
             },
             enabled = enabled,
-            leadingIcon = {
-                leadingIcon()
-            }
+            modifier = modifier
         )
     }
 }
+
 
 
 

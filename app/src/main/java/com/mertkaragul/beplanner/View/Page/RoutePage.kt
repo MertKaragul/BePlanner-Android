@@ -36,6 +36,7 @@ fun RoutePage() {
 
         },
         content = {
+            Permission()
             it.calculateTopPadding()
             NavHost(navController = rememberNavController, startDestination = RouteEnum.HOME_PAGE.toString() ){
                 composable(RouteEnum.HOME_PAGE.toString()){

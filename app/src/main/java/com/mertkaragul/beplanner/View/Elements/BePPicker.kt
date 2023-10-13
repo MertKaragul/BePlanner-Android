@@ -18,19 +18,12 @@ class BePPicker {
         ).show()
     }
 
-    fun dateTimePicker(context : Context, calendar : Calendar) : DatePickerModel{
-        var selectedYear = 0
-        var selectedMonth = 0
-        var selectedDay = 0
+    fun dateTimePicker(context : Context, calendar : Calendar, datePickerModel : (DatePickerModel) -> Unit ) {
         DatePickerDialog(
             context,
             {_, year:Int,month : Int, day : Int ->
-                selectedYear = year
-                selectedMonth = month
-                selectedDay = day
+                datePickerModel(DatePickerModel(year , month ,day))
             },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
-
-        return DatePickerModel(selectedYear,selectedMonth,selectedDay)
     }
 }
