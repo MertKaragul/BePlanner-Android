@@ -31,19 +31,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mertkaragul.beplanner.Model.AlarmModel.AlarmItem
 import com.mertkaragul.beplanner.Model.Picker.DatePickerModel
 import com.mertkaragul.beplanner.Model.Picker.TimePickerModel
 import com.mertkaragul.beplanner.View.Elements.BePButton
 import com.mertkaragul.beplanner.View.Elements.BePDefaultHeightSpacer
 import com.mertkaragul.beplanner.View.Elements.BePPicker
+import com.mertkaragul.beplanner.View.Elements.BePSingleShowDialog
 import com.mertkaragul.beplanner.View.Elements.BePText
 import com.mertkaragul.beplanner.View.Elements.BePTextField
+import com.mertkaragul.beplanner.Viewmodel.PlannerViewModel
 import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
 import java.util.Calendar
 
 @Composable
 fun Planner(
-    picker : BePPicker = BePPicker()
+    picker : BePPicker = BePPicker(),
+    planner : PlannerViewModel = viewModel()
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -54,6 +59,9 @@ fun Planner(
         val deviceHeight = LocalConfiguration.current.screenHeightDp
         val context = LocalContext.current
         val calendar = Calendar.getInstance()
+
+        var alarmItem by remember { mutableStateOf<AlarmItem?>(null) }
+
         var planName by remember { mutableStateOf("") }
         var timerModel by remember { mutableStateOf(TimePickerModel(0,0,0))  }
         var dateModel by remember { mutableStateOf(DatePickerModel(0,0,0))  }
@@ -67,8 +75,12 @@ fun Planner(
             Row(modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround) {
-                Column(modifier = Modifier.size(((deviceHeight + deviceWidth) * .009).dp).clip(
-                    RoundedCornerShape(100.dp)).background(MaterialTheme.colorScheme.primary)) {}
+                Column(modifier = Modifier
+                    .size(((deviceHeight + deviceWidth) * .009).dp)
+                    .clip(
+                        RoundedCornerShape(100.dp)
+                    )
+                    .background(MaterialTheme.colorScheme.primary)) {}
 
                 BePText(
                     text = "Let's take a plan",
@@ -77,8 +89,12 @@ fun Planner(
                     fontWeight = FontWeight.Bold
                 )
 
-                Column(modifier = Modifier.size(((deviceHeight + deviceWidth) * .009).dp).clip(
-                    RoundedCornerShape(100.dp)).background(MaterialTheme.colorScheme.primary)) {}
+                Column(modifier = Modifier
+                    .size(((deviceHeight + deviceWidth) * .009).dp)
+                    .clip(
+                        RoundedCornerShape(100.dp)
+                    )
+                    .background(MaterialTheme.colorScheme.primary)) {}
             }
             BePDefaultHeightSpacer()
             BePTextField(value = planName, onValueChange = { planName = it } , placeholder = "Plan name", modifier = Modifier.fillMaxWidth())
@@ -108,7 +124,25 @@ fun Planner(
                     .fillMaxWidth())
 
             BePDefaultHeightSpacer()
-            BePButton(text = "Create plan", onClick = {  }, modifier = Modifier.fillMaxWidth() ,buttonColors = ButtonDefaults.buttonColors( containerColor = MaterialTheme.colorScheme.primary))
+
+            BePButton(
+                text = "Create plan",
+                onClick = {
+                    if (planName.isNotEmpty() && planName.isNotBlank()) {
+                        calendar.set(dateModel.year,dateModel.month,dateModel.dayOfMonth,timerModel.hour,timerModel.minute,timerModel.second)
+                        println(calendar.timeInMillis)
+                        alarmItem = AlarmItem(message = planName, time = calendar.timeInMillis)
+                        if (alarmItem != null){
+                            planner.schedulePlan(context, alarmItem!!)
+                        }
+                    }else{
+                        println("planname empty")
+                    }
+
+                },
+                modifier = Modifier.fillMaxWidth() ,
+                buttonColors = ButtonDefaults.buttonColors( containerColor = MaterialTheme.colorScheme.primary)
+            )
         }
     }
 }
