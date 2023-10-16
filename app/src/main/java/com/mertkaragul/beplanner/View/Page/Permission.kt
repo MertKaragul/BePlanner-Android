@@ -1,45 +1,49 @@
 package com.mertkaragul.beplanner.View.Page
 
 import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
+import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
 import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.mertkaragul.beplanner.Service.PermissionService
 import com.mertkaragul.beplanner.View.Elements.BePButton
 import com.mertkaragul.beplanner.View.Elements.BePText
-import com.mertkaragul.beplanner.Viewmodel.PermissionViewModel
-import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Permission(
-    permissionViewModel: PermissionViewModel = viewModel()
+    permissionService: PermissionService = PermissionService()
 ) {
-    Column {
-        if (Build.VERSION.SDK_INT >= 31){
-            val permissions = rememberMultiplePermissionsState(permissions = listOf(android.Manifest.permission.SCHEDULE_EXACT_ALARM, android.Manifest.permission.POST_NOTIFICATIONS))
-            LaunchedEffect(key1 = Unit){
-                permissions.launchMultiplePermissionRequest()
-            }
-        }else{
-            val permissions = rememberMultiplePermissionsState(permissions = listOf(android.Manifest.permission.SET_ALARM, android.Manifest.permission.POST_NOTIFICATIONS))
-            LaunchedEffect(key1 = Unit){
-                permissions.launchMultiplePermissionRequest()
-            }
+    val context = LocalContext.current
+    val permission = rememberPermissionState(permission = android.Manifest.permission.POST_NOTIFICATIONS)
+    AnimatedVisibility(visible = (permission.status.shouldShowRationale || !permission.status.isGranted) , enter = fadeIn(), exit = fadeOut() ) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(30.dp)) {
+            BePText(text = "Permission denied, please go app settings and access notification permission", color = MaterialTheme.colorScheme.onPrimary)
+            BePButton(text = "Go app settings", onClick = { permissionService.routePermissionPage(context) })
         }
+    }
+
+    LaunchedEffect(key1 = permission){
+        permission.launchPermissionRequest()
     }
 }
 

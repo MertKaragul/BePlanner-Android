@@ -15,15 +15,14 @@ import com.mertkaragul.beplanner.Service.Notification.NotificationUtil
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null) return
-        val message = intent?.getStringExtra("EXTRA_MESSAGE")
-
-        println("i catch message : $message")
+        val message = intent?.getStringExtra("EXTRA_MESSAGE") ?: "I don't know but any plan triggered"
 
         createChannel(context)
+
         val notification = NotificationCompat.Builder(context, NotificationUtil.NOTIFICATION_ID.toString())
             .setSmallIcon(R.drawable.baseline_home_24)
             .setContentTitle(context.resources.getText(R.string.app_name))
-            .setContentText(message.toString())
+            .setContentText(message)
             .build()
 
 

@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mertkaragul.beplanner.Enum.RouteEnum
+import com.mertkaragul.beplanner.Service.Database.DatabaseSetup
 import com.mertkaragul.beplanner.View.Page.Home
 import com.mertkaragul.beplanner.View.Page.RoutePage
 import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
@@ -18,15 +19,18 @@ import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             BePlannerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     RoutePage()
                 }
             }
         }
+        DatabaseSetup().setupDatabase(applicationContext)
     }
 }
