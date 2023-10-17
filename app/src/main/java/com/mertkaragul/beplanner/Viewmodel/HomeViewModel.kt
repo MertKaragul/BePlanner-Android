@@ -1,5 +1,6 @@
 package com.mertkaragul.beplanner.Viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,13 +13,26 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class HomeViewModel: ViewModel() {
-    private val _plansLiveData = MutableLiveData<MutableList<DatabasePlanModel>>(mutableListOf())
-    val plansLiveData = _plansLiveData
+    val plansLiveData = MutableLiveData<MutableList<DatabasePlanModel>>(mutableListOf())
+
+    init {
+        getPlans()
+    }
 
     fun getPlans(){
         viewModelScope.launch {
-            _plansLiveData.value = database?.plannerDAO()?.getAll()
+            plansLiveData.value?.clear()
+            plansLiveData.value = database?.plannerDAO()?.getAll()
         }
     }
 
+    fun deletePlan(uuid : Int){
+        viewModelScope.launch {
+            val dao = database?.plannerDAO()
+            dao?.getById(uuid)?.let {
+                dao.delete(it)
+                plansLiveData.value?.remove(it)
+            }
+        }
+    }
 }

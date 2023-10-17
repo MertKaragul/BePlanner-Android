@@ -1,4 +1,4 @@
-package com.mertkaragul.beplanner
+package com.mertkaragul.beplanner.Interface
 
 import android.content.Context
 import com.mertkaragul.beplanner.Model.AlarmModel.AlarmItem

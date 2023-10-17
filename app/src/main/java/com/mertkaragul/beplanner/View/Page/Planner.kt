@@ -1,5 +1,8 @@
 package com.mertkaragul.beplanner.View.Page
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,6 +62,10 @@ fun Planner(
         val deviceHeight = LocalConfiguration.current.screenHeightDp
         val context = LocalContext.current
         val calendar = Calendar.getInstance()
+
+        var showAlert by remember {
+            mutableStateOf(false)
+        }
 
         var alarmItem by remember { mutableStateOf<AlarmItem?>(null) }
 
@@ -124,25 +131,31 @@ fun Planner(
                     .fillMaxWidth())
 
             BePDefaultHeightSpacer()
-
             BePButton(
                 text = "Create plan",
                 onClick = {
                     if (planName.isNotEmpty() && planName.isNotBlank()) {
-                        calendar.set(dateModel.year,dateModel.month,dateModel.dayOfMonth,timerModel.hour,timerModel.minute,timerModel.second)
-                        println(calendar.timeInMillis)
-                        alarmItem = AlarmItem(message = planName, time = calendar.timeInMillis)
-                        if (alarmItem != null){
-                            planner.schedulePlan(context, alarmItem!!)
+                        if (dateModel.year == 0 || dateModel.month == 0 || dateModel.dayOfMonth == 0 || timerModel.hour == 0){
+                            showAlert = true
+                        }else{
+                            calendar.set(dateModel.year,dateModel.month,dateModel.dayOfMonth,timerModel.hour,timerModel.minute,timerModel.second)
+                            println(calendar.timeInMillis)
+                            alarmItem = AlarmItem(message = planName, time = calendar.timeInMillis)
+                            if (alarmItem != null){
+                                planner.schedulePlan(context, alarmItem!!)
+                            }
                         }
-                    }else{
-                        println("planname empty")
                     }
-
                 },
                 modifier = Modifier.fillMaxWidth() ,
                 buttonColors = ButtonDefaults.buttonColors( containerColor = MaterialTheme.colorScheme.primary)
             )
+        }
+
+        AnimatedVisibility(visible = showAlert, enter = fadeIn(), exit = fadeOut()) {
+            BePSingleShowDialog(title = "Error", text = "Please select Time or calendar"){
+                showAlert = false
+            }
         }
     }
 }

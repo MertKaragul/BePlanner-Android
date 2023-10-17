@@ -9,4 +9,8 @@ class DatabaseSetup {
     fun setupDatabase(context : Context){
         database = Room.databaseBuilder(context,DatabaseDAO::class.java, "BePlannerDatabase").build()
     }
+
+    fun setupDatabaseCallback(context : Context): DatabaseDAO{
+        return Room.databaseBuilder(context,DatabaseDAO::class.java, "BePlannerDatabase").build()
+    }
 }

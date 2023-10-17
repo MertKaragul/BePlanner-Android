@@ -84,4 +84,8 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     ksp("androidx.room:room-compiler:2.5.2")
+
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
+
+
 }

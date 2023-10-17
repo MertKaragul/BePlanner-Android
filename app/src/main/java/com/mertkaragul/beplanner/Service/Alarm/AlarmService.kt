@@ -4,9 +4,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.mertkaragul.beplanner.IAlarmScheduler
+import com.mertkaragul.beplanner.Interface.IAlarmScheduler
 import com.mertkaragul.beplanner.Model.AlarmModel.AlarmItem
-import java.time.ZoneId
 
 class AlarmService : IAlarmScheduler {
     override fun schedule(context : Context,item: AlarmItem) {

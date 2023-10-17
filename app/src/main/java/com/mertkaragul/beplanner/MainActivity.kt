@@ -12,25 +12,34 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mertkaragul.beplanner.Enum.RouteEnum
 import com.mertkaragul.beplanner.Service.Database.DatabaseSetup
+import com.mertkaragul.beplanner.Service.Database.DatabaseUtils
 import com.mertkaragul.beplanner.View.Page.Home
 import com.mertkaragul.beplanner.View.Page.RoutePage
 import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private val databaseSetup = DatabaseSetup()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             BePlannerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                     RoutePage()
                 }
             }
         }
-        DatabaseSetup().setupDatabase(applicationContext)
+        databaseSetup.setupDatabase(applicationContext)
+    }
+
+    override fun onDestroy() {
+        DatabaseUtils.database?.close()
+        super.onDestroy()
     }
 }

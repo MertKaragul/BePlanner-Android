@@ -15,25 +15,22 @@ import com.mertkaragul.beplanner.ui.theme.BePlannerTheme
 @Composable
 fun BePSingleShowDialog(
     title : String,
-    text : String
+    text : String,
+    confirmButton : () -> Unit
 ) {
-    var showDialog by remember {
-        mutableStateOf(true)
-    }
+    AlertDialog(
+        onDismissRequest = { /*TODO*/ },
+        confirmButton = {
+            BePButton(text = "Ok", onClick = confirmButton)
+        },
 
-    AnimatedVisibility(visible = showDialog, enter = fadeIn(), exit = fadeOut()) {
-        AlertDialog(
-            onDismissRequest = { /*TODO*/ },
-            confirmButton = { BePButton(text = "Ok", onClick = { showDialog = false }) },
-
-            title = {
-                BePText(text = title)
-            },
-            text = {
-                BePText(text = text)
-            }
-        )
-    }
+        title = {
+            BePText(text = title)
+        },
+        text = {
+            BePText(text = text)
+        }
+    )
 }
 
 
@@ -41,6 +38,8 @@ fun BePSingleShowDialog(
 @Composable
 fun PreviewBePAlertDialog() {
     BePlannerTheme {
-        BePSingleShowDialog("Alert!", "Test Alert Dialog")
+        BePSingleShowDialog("Alert!", "Test Alert Dialog"){
+
+        }
     }
 }

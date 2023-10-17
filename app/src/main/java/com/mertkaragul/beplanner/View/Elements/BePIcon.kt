@@ -20,7 +20,7 @@ fun BePIcon(
         painter = painterResource(id = icon),
         tint = color,
         contentDescription = "",
-        modifier = modifier
+        modifier = modifier,
     )
 }
 

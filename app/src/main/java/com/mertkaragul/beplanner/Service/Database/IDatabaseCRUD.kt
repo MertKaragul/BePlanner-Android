@@ -13,6 +13,11 @@ interface IDatabaseCRUD {
     suspend fun getAll() : MutableList<DatabasePlanModel>
     @Query("SELECT * FROM DatabasePlanModel WHERE uuid IN (:id)")
     suspend fun getById(id : Int) : DatabasePlanModel
+    @Query("SELECT * FROM DatabasePlanModel WHERE name IN (:name)")
+    suspend fun getByName(name : String) : DatabasePlanModel
+    @Query("DELETE FROM DatabasePlanModel")
+    suspend fun deleteAlL()
+
     @Update
     suspend fun update (databasePlanModel: DatabasePlanModel)
     @Insert
