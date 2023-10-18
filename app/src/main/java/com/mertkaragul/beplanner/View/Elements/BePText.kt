@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
@@ -19,6 +20,7 @@ fun BePText(
     textAlign: TextAlign = TextAlign.Start,
     fontFamily: FontFamily = FontFamily.Default,
     color : Color = MaterialTheme.colorScheme.primary,
+    overflow :TextOverflow = TextOverflow.Visible,
     modifier : Modifier = Modifier,
 ) {
     Text(
@@ -28,6 +30,7 @@ fun BePText(
         fontFamily = fontFamily,
         color = color,
         modifier = modifier,
-        textAlign = textAlign
+        textAlign = textAlign,
+        overflow = overflow
     )
 }

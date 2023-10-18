@@ -24,6 +24,9 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null) return
         val message = intent?.getStringExtra("EXTRA_MESSAGE") ?: "I don't know but any plan triggered"
+
+        println("ALARM RECEIVER WORKING")
+
         createChannel(context)
         val notification = NotificationCompat.Builder(context, NotificationUtil.NOTIFICATION_ID.toString())
             .setSmallIcon(R.drawable.baseline_home_24)

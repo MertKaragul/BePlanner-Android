@@ -10,16 +10,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +36,7 @@ import com.mertkaragul.beplanner.Model.Picker.TimePickerModel
 import com.mertkaragul.beplanner.View.Elements.BePButton
 import com.mertkaragul.beplanner.View.Elements.BePDefaultHeightSpacer
 import com.mertkaragul.beplanner.View.Elements.BePPicker
-import com.mertkaragul.beplanner.View.Elements.BePSingleShowDialog
+import com.mertkaragul.beplanner.View.Elements.BePDialog
 import com.mertkaragul.beplanner.View.Elements.BePText
 import com.mertkaragul.beplanner.View.Elements.BePTextField
 import com.mertkaragul.beplanner.Viewmodel.PlannerViewModel
@@ -153,9 +148,19 @@ fun Planner(
         }
 
         AnimatedVisibility(visible = showAlert, enter = fadeIn(), exit = fadeOut()) {
-            BePSingleShowDialog(title = "Error", text = "Please select Time or calendar"){
-                showAlert = false
-            }
+            BePDialog(
+                title = "Error",
+                description = "Please select Time or calendar",
+                confirm = {
+                    BePButton(text = "Ok", onClick = { showAlert = false })
+                },
+                dismiss = {
+
+                },
+                onDismissRequest = {
+                    showAlert = false
+                }
+            )
         }
     }
 }

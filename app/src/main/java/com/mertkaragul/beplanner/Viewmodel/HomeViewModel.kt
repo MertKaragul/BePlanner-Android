@@ -1,15 +1,10 @@
 package com.mertkaragul.beplanner.Viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mertkaragul.beplanner.Model.DatabaseModel.DatabasePlanModel
 import com.mertkaragul.beplanner.Service.Database.DatabaseUtils.database
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class HomeViewModel: ViewModel() {
@@ -33,6 +28,18 @@ class HomeViewModel: ViewModel() {
                 dao.delete(it)
                 plansLiveData.value?.remove(it)
             }
+        }
+    }
+
+    fun clearAllRemindedPlans(){
+        if (plansLiveData.value.isNullOrEmpty()) return
+        viewModelScope.launch {
+            val dao = database?.plannerDAO()
+            plansLiveData.value
+                ?.filter { it.status }
+                ?.map {
+                    dao?.delete(it)
+                }
         }
     }
 }
